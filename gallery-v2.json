@@ -1,0 +1,10 @@
+{
+  "name": "Quantumult X 节点测试 V2",
+  "task": [
+    {
+      "config": "0 0 1 1 * https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/scripts/node-score-ranking.js#force-timeout=600000, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, tag=节点分数排名, enabled=true",
+      "addons": ""
+    }
+  ],
+  "description": "安装后请在请求列表中手动执行节点分数排名。"
+}
