@@ -1,0 +1,22 @@
+{
+  "name": "四机场节点质量检测",
+  "task": [
+    {
+      "config": "0 0 1 1 * https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/scripts/node-score-ranking-v3.js#policy=%E6%A3%80%E6%B5%8B-%E5%8D%83%E9%80%9F%E7%8C%AB&force-timeout=600000, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, tag=千速猫节点检测, enabled=true",
+      "addons": ""
+    },
+    {
+      "config": "1 0 1 1 * https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/scripts/node-score-ranking-v3.js#policy=%E6%A3%80%E6%B5%8B-%E8%8B%8F%E8%8F%B2&force-timeout=600000, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, tag=苏菲节点检测, enabled=true",
+      "addons": ""
+    },
+    {
+      "config": "2 0 1 1 * https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/scripts/node-score-ranking-v3.js#policy=%E6%A3%80%E6%B5%8B-%E7%99%BD%E6%9C%88%E5%85%89&force-timeout=600000, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, tag=白月光节点检测, enabled=true",
+      "addons": ""
+    },
+    {
+      "config": "3 0 1 1 * https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/scripts/node-score-ranking-v3.js#policy=%E6%A3%80%E6%B5%8B-%E4%B8%80%E5%88%86&force-timeout=600000, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, tag=一分节点检测, enabled=true",
+      "addons": ""
+    }
+  ],
+  "description": "分别检测千速猫、苏菲、白月光、一分的全部节点；顶部显示前三名，下面显示完整节点结果。"
+}
