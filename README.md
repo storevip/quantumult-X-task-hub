@@ -1,38 +1,44 @@
 # Quantumult X Task Hub
 
-Quantumult X 节点质量检测工具。
+## 节点分数排名 V3
 
-## 一键导入
+V3 支持按机场策略组分别检测，避免一次测试全部机场。
 
-在 Quantumult X 的「请求列表 → 任务仓库」中添加：
+### 推荐使用方法
 
-```text
-https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/gallery.json
-```
-
-进入仓库后安装「节点分数排名」，再回到请求列表手动执行。
-
-> 任务仓库只接受 Cron 格式，因此仓库项目使用一个一年一次的占位时间；平时请手动执行。脚本不会每天自动运行。
-
-## 检测内容
-
-- ChatGPT、Gemini、Claude
-- Quantumult X URL 延迟
-- 出口 IP、中文地区与 ASN
-- 数据中心、VPN、代理、Tor 与滥用风险标记
-- 综合分数与推荐等级
-
-## 长按节点调用（可选）
-
-如果希望在首页长按节点或策略组后运行，请把下面一行放入当前配置的 `[task_local]`：
+把下面一行放在当前配置的 `[task_local]` 段：
 
 ```ini
 event-interaction https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/scripts/node-score-ranking.js, tag=节点分数排名, img-url=bolt.horizontal.circle.fill.system, enabled=true
 ```
 
-## 使用提醒
+保存后，在 QuanX 首页长按某个机场策略组，选择「节点分数排名」。脚本只会检测该组里的全部节点。
 
-- 节点需要存在于至少一个策略组中。
-- 默认最多检测 80 个节点，并发数为 3。
-- 测试时尽量让 Quantumult X 保持在前台。
-- 风险分是根据公开 IP 风险标记计算的估算值，越低越好。
+### 输出内容
+
+结果顶部显示综合前三名，下面显示该机场全部节点：
+
+- 节点名称
+- 国家中文名
+- 欺诈分（根据 IP 风险标记估算，越低越好）
+- IP 纯净度
+- Google 是否送中
+- ChatGPT 是否支持
+- Gemini 是否支持
+- IP、延迟与综合分
+
+Claude 检测已移除，以缩短检测时间。默认并发 5 个节点，单个请求超时 9 秒。
+
+### 任务仓库地址
+
+```text
+https://raw.githubusercontent.com/storevip/quantumult-X-task-hub/main/gallery-v2.json
+```
+
+任务仓库入口只支持 Cron，无法选择机场策略组；按机场检测请使用上面的 `event-interaction` 长按方式。
+
+### 文件
+
+- `scripts/node-score-ranking.js`：当前稳定版（V3）
+- `scripts/node-score-ranking-v3.js`：V3 固定版本
+- `gallery-v2.json`：QuanX 任务仓库入口
