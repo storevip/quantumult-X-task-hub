@@ -7,7 +7,7 @@
  * 3. 查询出口 IP、中文地区、ASN 与风险特征
  * 4. 结合 AI 解锁、延迟、IP 风险计算综合分并排名
  *
- * 使用方式：作为 event-interaction 任务运行。
+ * 使用方式：可作为 event-interaction 运行，也可从任务仓库安装后手动执行。
  * 注意：结果必须使用 $done({ title, message })，不要改成 content。
  */
 
@@ -148,17 +148,45 @@ function validateNodes(candidates) {
   ).then(items => unique(items.filter(item => typeof item === "string" && item)));
 }
 
+function customizedPolicyNodes(ret) {
+  if (!ret || typeof ret !== "object") return [];
+  const policyNames = new Set(Object.keys(ret));
+  const nodes = [];
+
+  Object.keys(ret).forEach(name => {
+    const item = ret[name];
+    if (item && typeof item === "object" && Array.isArray(item.candidates)) {
+      item.candidates.forEach(candidate => {
+        const node = cleanCandidate(candidate);
+        if (node && !policyNames.has(node)) nodes.push(node);
+      });
+    }
+  });
+
+  return unique(nodes);
+}
+
 function discoverNodes() {
-  if (CONFIG.manualNodes.length) return validateNodes(unique(CONFIG.manualNodes));
+  if (CONFIG.manualNodes.length) {
+    const manual = unique(CONFIG.manualNodes);
+    return validateNodes(manual).then(valid => valid.length ? valid : manual);
+  }
 
   return Promise.all([
     sendMessage("get_customized_policy").catch(() => null),
     sendMessage("get_policy_state").catch(() => null)
   ]).then(values => {
-    const candidates = unique(
-      collectCandidates(values[0]).concat(collectCandidates(values[1]))
+    const exactCandidates = customizedPolicyNodes(values[0]);
+    const fallbackCandidates = unique(
+      exactCandidates.concat(collectCandidates(values[0])).concat(collectCandidates(values[1]))
     );
-    return validateNodes(candidates);
+
+    // get_server_description 仅在 event-interaction 中可用。
+    // 定时/请求列表任务无法使用时，退回 get_customized_policy 的 candidates。
+    return validateNodes(fallbackCandidates).then(valid => {
+      if (valid.length) return valid;
+      return exactCandidates.length ? exactCandidates : fallbackCandidates;
+    });
   });
 }
 
@@ -359,7 +387,11 @@ function formatResult(item, index) {
 }
 
 function finish(title, message, notifyMessage) {
-  if (notifyMessage) $notify(title, "", notifyMessage);
+  if (notifyMessage) {
+    $notify(title, "", notifyMessage);
+  } else if (message) {
+    $notify(title, "", message);
+  }
   $done({ title, message });
 }
 
